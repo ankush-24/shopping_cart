@@ -23,3 +23,5 @@ class Borrowed(models.Model):
 		return self.what.name
 	def __str__(self):
 		return self.to_who.name				
+
+
