@@ -14,7 +14,7 @@ from user.forms import SignUpForm
 from rest_framework import viewsets
 from user import serializers
 from user.models import Profile
-from user.forms import UserForm,ProfileForm
+from user.forms import UserForm
 
 curl = settings.CURRENT_PATH
 
@@ -114,28 +114,45 @@ class CartViewset(viewsets.ModelViewSet):
     serializer_class = serializers.CartSerializer    
 
 
-
-@login_required
-@transaction.atomic
-def update_profile(request):
-    if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, instance=request.user.profile)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            return HttpResponseRedirect('/')
-        else:
-            messages.error(request, _('Please correct the error below.'))
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
-    return render(request, 'home/profile.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
-
-
 def Logout(request):
     logout(request)
     return HttpResponseRedirect('/')        
+
+# @login_required
+# @transaction.atomic
+# def update_profile(request):
+#     if request.method == 'POST':
+#         user_form = UserForm(request.POST, instance=request.user)
+#         profile_form = ProfileForm(request.POST, instance=request.user.profile)
+#         if user_form.is_valid() and profile_form.is_valid():
+#             user_form.save()
+#             profile_form.save()
+#             return HttpResponseRedirect('/')
+#         else:
+#             messages.error(request, _('Please correct the error below.'))
+#     else:
+#         user_form = UserForm(instance=request.user)
+#         profile_form = ProfileForm(instance=request.user.profile)
+#     return render(request, 'home/profile.html', {
+#         'user_form': user_form,
+#         'profile_form': profile_form
+#     })
+
+
+# def changepass(request):
+#     if request.method=='GET':
+#         return render(request,'changepass.html',{'curl':curl,'sunm':request.session['sunm'],'output':''})
+#     else:
+#         opass = request.POST.get('opass')
+#         npass  = request.POST.get('npass')
+#         cnpass = request.POST.get('cnpass')
+
+#         userdetails = models.register.objects.filter(username=request.session['sunm'],password=opass)
+#         if len(userdetails)>0:
+#             if npass==cnpass:
+#                 models.register.objects.filter(username=request.session['sunm'],password=opass).update(password=npass)
+#                 return render(request,'changepass.html',{'curl':curl,'sunm':request.session['sunm'],'output':'Password Change Successfully'})   
+#             else:
+#                 return render(request,'changepass.html',{'curl':curl,'sunm':request.session['sunm'],'output':'New Password and confirm new password MisMatch'})             
+#         else:
+#             return render(request,'changepass.html',{'curl':curl,'sunm':request.session['sunm'],'output':'Invalid Old Password'})       
